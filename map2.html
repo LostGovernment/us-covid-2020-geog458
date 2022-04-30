@@ -13,15 +13,15 @@
             margin: 0;
             padding: 0;
         }
-
+        
         #map {
             position: absolute;
             top: 0;
             bottom: 0;
             width: 100%;
         }
-
         /* the layout of the legend panel */
+        
         #legend {
             position: absolute;
             bottom: 0;
@@ -35,31 +35,31 @@
             text-align: center;
             font-family: 'Open Sans', sans-serif;
         }
-
         /* each line for a break */
+        
         .break {
             position: relative;
             margin: 0px;
             padding: 0px;
         }
-
         /* basic style for a dot/circle */
+        
         .dot {
             display: inline-block;
             margin-top: 5px;
             border-radius: 50%;
             opacity: 0.6;
         }
-
         /* the label for the dot */
+        
         .dot-label {
             position: absolute;
             top: 0;
             right: 0;
             font-style: italic;
         }
-
         /* the text color of a hyper link */
+        
         a {
             color: black
         }
@@ -80,8 +80,9 @@
             projection: 'albers'
         });
 
-        const rates = [5000, 10000, 20000],
-            colors = ['rgb(208,209,230)', 'rgb(103,169,207)', 'rgb(1,108,89)'],
+        const counts = [5000, 10000, 20000],
+            colors = ['rgb(237,248,177)', 'rgb(127,205,187)', 'rgb(44,127,184)'],
+            // YlGnBu .q0-3{fill:rgb(237,248,177)} .YlGnBu .q1-3{fill:rgb(127,205,187)} .YlGnBu .q2-3{fill:rgb(44,127,184)}
             radii = [5, 15, 20];
 
         //load data to the map as new layers.
@@ -107,40 +108,40 @@
                             'stops': [
                                 [{
                                     zoom: 5,
-                                    value: rates[0]
+                                    value: counts[0]
                                 }, radii[0]],
                                 [{
                                     zoom: 5,
-                                    value: rates[1]
+                                    value: counts[1]
                                 }, radii[1]],
                                 [{
                                     zoom: 5,
-                                    value: rates[2]
+                                    value: counts[2]
                                 }, radii[2]]
                             ]
                         },
                         'circle-color': {
                             'property': 'cases',
                             'stops': [
-                                [case_numbers[0], colors[0]],
-                                [case_numbers[1], colors[1]],
-                                [case_numbers[2], colors[2]]
+                                [counts[0], colors[0]],
+                                [counts[1], colors[1]],
+                                [counts[2], colors[2]]
                             ]
                         },
                         'circle-stroke-color': 'white',
                         'circle-stroke-width': 1,
-                        'circle-opacity': 0.6
+                        'circle-opacity': 0.9
                     }
                 },
                 'waterway-label'
             );
 
 
-            // click on tree to view magnitude in a popup
+            // click on tree to view counts in a popup
             map.on('click', 'covid-counts-layer', (event) => {
                 new mapboxgl.Popup()
                     .setLngLat(event.features[0].geometry.coordinates)
-                    .setHTML(`<strong>Case Number:</strong> ${event.features[0].properties.mag}`)
+                    .setHTML(`<strong>Case Counts</strong> ${event.features[0].properties.cases}`)
                     .addTo(map);
             });
 
@@ -151,11 +152,11 @@
         const legend = document.getElementById('legend');
 
         //set up legend grades and labels
-        var labels = ['<strong>Case Number</strong>'],
+        var labels = ['<strong>Cases Counts</strong>'],
             vbreak;
         //iterate through grades and create a scaled circle and label for each
-        for (var i = 0; i < rates.length; i++) {
-            vbreak = grades[i];
+        for (var i = 0; i < counts.length; i++) {
+            vbreak = counts[i];
             // you need to manually adjust the radius of each dot on the legend 
             // in order to make sure the legend can be properly referred to the dot on the map.
             dot_radii = 2 * radii[i];
@@ -168,7 +169,7 @@
         }
         // add the data source
         const source =
-            '<p style="text-align: right; font-size:10pt">Source: <a href="www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html">The New York Times</a></p>';
+            '<p style="text-align: right; font-size:10pt">Source: <a href="https://www.nytimes.com/interactive/2021/us/covid-cases.html">The New York Times</a></p>';
         // combine all the html codes.
         legend.innerHTML = labels.join('') + source;
     </script>
