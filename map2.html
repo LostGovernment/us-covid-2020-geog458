@@ -13,15 +13,16 @@
             margin: 0;
             padding: 0;
         }
-        
+
         #map {
             position: absolute;
             top: 0;
             bottom: 0;
             width: 100%;
         }
+
         /* the layout of the legend panel */
-        
+
         #legend {
             position: absolute;
             bottom: 0;
@@ -35,31 +36,74 @@
             text-align: center;
             font-family: 'Open Sans', sans-serif;
         }
+
+        #title {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin-top: 20px;
+            margin-left: 20px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 25pt;
+            font-weight: bolder;
+            background-color: rgb(255, 255, 255);
+            color: rgb(0, 0, 0)
+        }
+
+        #mapdesc {
+            position: absolute;
+            bottom: 8px;
+            left: 16px;
+            margin-bottom: 18px;
+            margin-left: 5px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 7pt;
+            font-weight: bolder;
+            background-color: rgb(255, 255, 255);
+            color: rgb(0, 0, 0)
+        }
+
+        #subtitle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin-top: 70px;
+            margin-left: 190px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15pt;
+            font-weight: bolder;
+            background-color: whitesmoke;
+            color: rgb(44, 4, 221)
+        }
+
         /* each line for a break */
-        
+
         .break {
             position: relative;
             margin: 0px;
             padding: 0px;
         }
+
         /* basic style for a dot/circle */
-        
+
         .dot {
             display: inline-block;
             margin-top: 5px;
             border-radius: 50%;
             opacity: 0.6;
         }
+
         /* the label for the dot */
-        
+
         .dot-label {
             position: absolute;
             top: 0;
             right: 0;
             font-style: italic;
         }
+
         /* the text color of a hyper link */
-        
+
         a {
             color: black
         }
@@ -69,13 +113,27 @@
 <body>
     <div id="map"></div>
     <div id="legend"></div>
+    <div id="title">
+        Covid-19 Case Counts
+    </div>
+    <div id="subtitle">
+        Mainland United States of America in 2020
+    </div>
+    <div id="mapdesc">
+        The map is showing the covid-19 case counts <br>
+        in the United States in the Year of 2020. <br> It has been aggregated to
+        the state level. <br> The covid data was acquired from the New York Times.
+        <br>
+        Map Author: Ali Basbeth <br>
+        Date: April 29, 2022
+    </div>
     <script>
         mapboxgl.accessToken =
             'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
         let map = new mapboxgl.Map({
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/light-v10',
-            zoom: 4, // starting zoom
+            zoom: 3.5, // starting zoom
             center: [-100, 40], // starting center
             projection: 'albers'
         });
@@ -141,10 +199,11 @@
             map.on('click', 'covid-counts-layer', (event) => {
                 new mapboxgl.Popup()
                     .setLngLat(event.features[0].geometry.coordinates)
-                    .setHTML(`<strong>Case Counts</strong> ${event.features[0].properties.cases}`)
+                    .setHTML(
+                        `<strong> state: </strong> ${event.features[0].properties.state} <br> <strong>county: </strong> ${event.features[0].properties.county} <br> <strong>case counts:</strong> ${event.features[0].properties.cases}`
+                        )
                     .addTo(map);
             });
-
         });
 
 
@@ -152,7 +211,7 @@
         const legend = document.getElementById('legend');
 
         //set up legend grades and labels
-        var labels = ['<strong>Cases Counts</strong>'],
+        var labels = ['<strong>Case Counts</strong>'],
             vbreak;
         //iterate through grades and create a scaled circle and label for each
         for (var i = 0; i < counts.length; i++) {

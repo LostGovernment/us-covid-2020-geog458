@@ -91,20 +91,22 @@
     <div class='map-overlay' id='features'>
         <h2>Covid Case Rates US 2020</h2>
         <div id='text-description'>
-            <p>Hover over a state!</p>
+            <p>Click on state to see the rates</p>
         </div>
     </div>
     <div class='map-overlay' id='legend'></div>
+
     <script>
         mapboxgl.accessToken =
             'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
         let map = new mapboxgl.Map({
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/light-v10',
-            zoom: 4, // starting zoom
+            zoom: 3, // starting zoom
             center: [-100, 40], // starting center
             projection: 'albers'
         });
+        
         //load data to the map as new layers.
         //map.on('load', function loadingData() {
         map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
@@ -191,10 +193,11 @@
             });
             document.getElementById('text-description').innerHTML = state.length ?
                 `<h3>${state[0].properties.name}</h3><p><strong><em>${state[0].properties.density}</strong>cases rates</em></p>` :
-                `<p>Hover over a state!</p>`;
+                `<p>Click on state to see the rates</p>`;
         });
         geojsonFetch();
     </script>
 </body>
 
 </html>
+
